@@ -50,7 +50,7 @@ public class SKSpamBlocker{
 			initiated = true;
 		}
 
-		train("sms.xls", 100);
+		train("sms.xls", 200);
 	
 	}
 
@@ -158,7 +158,7 @@ public class SKSpamBlocker{
 		System.out.println("Total Trained: " + skneuralnetwork.getNumTrained() );
 		skneuralnetwork.printCostFunctionJ(x, t, numSms);
 		
-		/*
+		
 		//checking how many classification error in the Training set.
 		int totalError = 0;
 		for(int i=0; i<numSms; i++)
@@ -170,7 +170,7 @@ public class SKSpamBlocker{
 			}
 		}
 		System.out.println("TotalError = " + totalError);
-		*/
+		
 
 		
 
