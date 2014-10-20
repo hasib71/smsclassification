@@ -50,12 +50,11 @@ public class SKSpamBlocker{
 			initiated = true;
 		}
 
-		train("sms.xls", 200);
-	
+		train("sms.xls", 0);
+
 	}
 
 
-	
 	public boolean isSpam(String mobileNo, String msg)
 	{
 		boolean spam = false;
@@ -64,7 +63,7 @@ public class SKSpamBlocker{
 		for(int i=0; i<len; i++)
 		{
 			ch = mobileNo.charAt(i);
-			if( !(ch == '+' || ('0' <= ch && ch <='9') ) )
+			if( !( (ch == '+') || ('0' <= ch && ch <='9') ) )
 			{
 				spam = true;
 				break;
@@ -81,13 +80,9 @@ public class SKSpamBlocker{
 			hashFullString(x, msg);
 			return (skneuralnetwork.feedForward( x ) == 1 );
 		}
-
-
-
-
 	}
 
-	
+
 	private void hashFullString(double x[], String msg)
 	{
 		msg = msg.toLowerCase(Locale.ENGLISH);
@@ -95,6 +90,15 @@ public class SKSpamBlocker{
 		String msgtokens[] = msg.split(delims);
 		
 		int h;
+
+
+		/*
+		 | k
+		 |-----------------------------------------------------------
+		 | How many hash function we want to generate from one word.
+		 | This is a bloom Filter Idea.
+		 |------------------------------------------------------------
+		 */
 		int k = 5;
 		for(int i=0; i<msgtokens.length; i++)
 		{
@@ -107,7 +111,6 @@ public class SKSpamBlocker{
 	}
 
 
-	
 	private int hash(String str, double reduce)
 	{
 		int len = Math.min(str.length(), 100);
@@ -131,9 +134,22 @@ public class SKSpamBlocker{
 
 	private void train(String excelFileName, int times)
 	{
-		int numSms = 2916; //number of sms in the database(xl file)
+		/*
+		 |-------------------------------------------------------------
+		 | Number of SMS in xls file.
+		 | set the initial value to zero. So that We can follow any 
+		 | error occured at reading number of sms dynamically.
+		 |-------------------------------------------------------------
+		 */
+		int numSms = 0; 
 		try{
-			numSms = (new HSSFWorkbook(new FileInputStream(excelFileName)).getSheetAt(0)).getLastRowNum();
+			/*
+			 |---------------------------------------------------------
+			 | getLastRowNum() return a zero based index of lastRow.
+			 |---------------------------------------------------------
+			 */
+			numSms = (new HSSFWorkbook(new FileInputStream(excelFileName)).getSheetAt(0)).getLastRowNum() + 1;
+			System.out.println(numSms);
 		}catch(Exception e)
 		{
 			e.printStackTrace();
@@ -161,7 +177,7 @@ public class SKSpamBlocker{
 		
 		//checking how many classification error in the Training set.
 		int totalError = 0;
-		for(int i=0; i<numSms; i++)
+		for(int i=0; i < numSms; i++)
 		{
 			if(t[i][ skneuralnetwork.feedForward(x[i]) ] == 0)
 			{
