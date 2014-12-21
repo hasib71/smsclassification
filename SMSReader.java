@@ -5,7 +5,7 @@ public class SMSReader{
 	{
 		SKSpamBlocker block = new SKSpamBlocker();
 		block.init();
-		System.out.println(block.isSpam("1", "Your bKash Buy Airtime request of Tk 17.00 for 01820736109 was successful. "));
+		System.out.println(block.isSpam("1", "আজ দুই দিনের প্যাক কিনলেই এমবি বোনাস। অ্যাকটিভ করতে ডায়াল করুন"));
 		//System.out.println(block.isSpam("1", "jan"));
 	}
 }
